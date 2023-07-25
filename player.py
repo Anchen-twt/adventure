@@ -12,6 +12,6 @@ class Player:
     # 进行一次攻击
     def attack(self, monster):
       monster.hp -= self.atk
-      print(f'你攻击了怪物！造成了{self.atk}点伤害')
+      print(f'你攻击了{monster.name}！造成了{self.atk}点伤害')
     
     

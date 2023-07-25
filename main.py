@@ -64,6 +64,7 @@ class Game:
       # 如果击败怪物，设置当前场景没有怪物了
       if monster.hp <= 0:
         current_scene = self.scenes[self.player.loc]
+        print(f'你击败了{current_scene.monster.name}')
         current_scene.monster = None
 
 
