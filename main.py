@@ -9,7 +9,7 @@ class Game:
         self.scenes = {
             'start': Scene('start', '你站在城堡门前', {'enter': 'hall'}),
             'hall': Scene('hall', '你进入到城堡大厅', {'north': 'dungeon', 'east': 'treasure'}),
-            'dungeon': Scene('dungeon', '你进入了地牢', {'south': 'hall'}, Monster(10, 2)),
+            'dungeon': Scene('dungeon', '你进入了地牢', {'south': 'hall'}, Monster('Skeleton', 10, 2)),
             'treasure': Scene('treasure', '你获得了宝藏!', {})
         }
  

@@ -8,7 +8,7 @@ class Scene:
      # 根据有无怪物输出不同desc
      def desc(self):
          if self.monster:
-           return f'{self.base_desc}\n这里有怪物!'
+           return f'{self.base_desc} \n 这里有怪物! \n 你遇到了{self.monster.name}'
          else:
            return self.base_desc
       
