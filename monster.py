@@ -1,8 +1,9 @@
 class Monster:
-  def __init__(self, name, hp, atk):
+  def __init__(self, name, hp, atk, drops=[]):
     self.name = name
     self.hp = hp
     self.atk = atk
+    self.drops = drops
     
   # 进行一次攻击
   def attack(self, player):

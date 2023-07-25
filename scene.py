@@ -1,9 +1,10 @@
 class Scene:
-     def __init__(self, name, desc, exits, monster = None):
+     def __init__(self, name, desc, exits, monster=None, item=None):
          self.name = name
          self.base_desc = desc
          self.exits = exits
          self.monster = monster
+         self.item = item
      
      # 根据有无怪物输出不同desc
      def desc(self):
@@ -18,3 +19,13 @@ class Scene:
            return True
          else:
            return False
+           
+     # 捡起物品
+     def pickup(self, player):
+         if self.item:
+           player.inventory.append(self.item)
+           print(f"你捡起了{self.item}")
+           # 清空场景
+           self.item = None
+         else:
+           print("这里没有可以拾取的物品")
