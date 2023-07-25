@@ -1,10 +1,11 @@
 class Scene:
-     def __init__(self, name, desc, exits, monster=None, item=None):
+     def __init__(self, name, desc, exits, monster=None, item=None, mechanism=None):
          self.name = name
          self.base_desc = desc
          self.exits = exits
          self.monster = monster
          self.item = item
+         self.mechanism = mechanism
      
      # 根据有无怪物输出不同desc
      def desc(self):
@@ -14,7 +15,7 @@ class Scene:
            return self.base_desc
       
      # 检查移动命令是否合法   
-     def validate_action(self, action):
+     def validate_movement(self, action):
          if action in self.exits:
            return True
          else:

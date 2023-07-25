@@ -4,41 +4,48 @@ import random
 from scene import Scene
 from player import Player
 from monster import Monster
+from mechanism import Mechanism
+from mechanism import key_door
 
 class Game:
     def __init__(self):
         self.scenes = {
             'start': Scene('start', '你站在城堡门前', {'进入': 'hall'}),
-            'hall': Scene('hall', '你进入到城堡大厅', {'向北': 'dungeon', '向东': 'treasure'}),
-            'dungeon': Scene('dungeon', '你进入了地牢', {'向南': 'hall'}, Monster('Skeleton', 10, 2, ['钥匙'])),
-            'treasure': Scene('treasure', '你进入了藏宝室', {}, None, '宝藏')
+            'hall': Scene('hall', '你进入到城堡大厅', {'北': 'dungeon', '东': 'treasure'}),
+            'dungeon': Scene('dungeon', '你进入了地牢', {'南': 'hall'}, Monster('骷髅', 20, 3, ['钥匙'])),
+            'treasure': Scene('treasure', '你进入了藏宝室', {}, None, '宝藏', key_door)
         }
  
         self.player = Player(100, 20, [])
  
     def play(self):
+        # 提示信息
+        print('操作提示:进入 东 西 南 北 搜刮 退出')
         # 显示初始场景信息
         current_scene = self.scenes[self.player.loc]
         print(current_scene.desc())
         while True:
             # 获取玩家输入的操作
             action = input(f'选择操作: ')
-            # 根据操作执行事件
-            # 移动
-            if current_scene.validate_action(action):
-                self.player.move(self.scenes, action)
-                # 移动后更新current_scene
+            # 根据操作执行事件                              
+            # 移动            
+            if current_scene.validate_movement(action):
+                self.player.move(self.scenes, action)  
+               
+                # 更新current_scene
                 current_scene = self.scenes[self.player.loc]
                 print(current_scene.desc())
+                
                 # 如果有怪物
                 if current_scene.monster:
-                  # 战斗
-                  self.fight_with_monster(self.player, current_scene.monster)     
-                  continue
-            # 捡起物品
+                    # 战斗
+                    self.fight_with_monster(self.player, current_scene.monster)     
+                    continue
+            
+            # 捡取物品
             elif action == "搜刮":
-                current_scene.pickup(self.player)      
-                
+                current_scene.pickup(self.player)   
+            
             elif action == '退出':
                 sys.exit()
             else:
