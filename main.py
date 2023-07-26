@@ -36,7 +36,7 @@ class Game:
                  'dungeon', 
                  '你进入了地牢', 
                  {'南': 'hall'}, 
-                 Monster('骷髅', 20, 3, ['钥匙'])
+                 Monster('骷髅', 105, 17, ['钥匙'])
             ),
             
             'treasure': Scene(
@@ -104,8 +104,13 @@ class Game:
                 # 如果有怪物
                 if current_scene.monster:
                     # 战斗
-                    self.fight_with_monster(self.player, current_scene.monster)     
-                    continue
+                    self.fight_with_monster(self.player, current_scene.monster)
+                    # 检查玩家是否被击败
+                    if not self.check_player_death():  
+                      continue
+                    else:
+                      self.print_final_state()
+                      break
             
             # 捡取物品
             elif action == "搜刮":
@@ -116,40 +121,58 @@ class Game:
             else:
                 print('无效操作!')
                 
-            if self.check_game_over():
-              print(f"你的最终生命值:{self.player.hp}")
-              print(f"你的最终攻击力:{self.player.atk}")
-              print(f"你的最终物品:{self.player.inventory}")
+            if self.check_game_win():
+              self.print_final_state()
               break
     
+    def check_player_death(self):
+      """检查玩家是否死亡"""
+      if self.player.hp <= 0:
+        print("Wasted!")
+        return True
+      else:
+        return False
     
-    def check_game_over(self):
-      """检查游戏是否结束"""
+    def check_game_win(self):
+      """检查游戏是否胜利"""
       if '宝藏' in self.player.inventory:
         print("你找到了宝藏,游戏结束!") 
         return True
       elif self.player.hp <= 0:
         print("Wasted!")
+        return True
       else:
         return False
+    
+    def print_final_state(self):
+      """游戏结束时输出玩家最终状态"""
+      print(f"你的最终生命值:{self.player.hp}")
+      print(f"你的最终攻击力:{self.player.atk}")
+      print(f"你的最终物品:{self.player.inventory}")
         
     def fight_with_monster(self, player, monster):
       """处理玩家和一只怪物之间的战斗"""
       while player.hp and monster.hp > 0:
-        # 循环回合制
+        # 怪物先手
+        # 怪物回合
         monster.attack(player)
+        if player.hp <= 0:
+            # 玩家被击败
+            print(f' 你被{monster.name}击败了!')
+            break
+            
+        # 玩家回合 
         player.attack(monster)
-      
-      # 如果击败怪物，设置当前场景没有怪物了
-      if monster.hp <= 0:
-        current_scene = self.scenes[self.player.loc]
-        print(f' 你击败了{current_scene.monster.name}')
-        current_scene.monster = None
+        if monster.hp <= 0:
+            # 怪物被击败
+            current_scene = self.scenes[self.player.loc]
+            print(f' 你击败了{current_scene.monster.name}')
+            current_scene.monster = None
         
-        # 随机选择一个战利品
-        loot = random.choice(monster.drops)
-        print(f' 你获得了{loot}!')
-        player.inventory.append(loot)
+            # 随机选择一个战利品
+            loot = random.choice(monster.drops)
+            print(f' 你获得了{loot}!')
+            player.inventory.append(loot)
     
     def save_game(self, filename):
         """存档"""
@@ -174,6 +197,6 @@ class Game:
         else:
             print('存档不存在!')
     
- 
-game = Game()
-game.play()
+if __name__ == '__main__':
+  game = Game()
+  game.play()
