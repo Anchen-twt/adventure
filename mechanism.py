@@ -13,6 +13,6 @@ class Mechanism:
      
   def pass_mechanism(self, player):
       # 玩家通过机关的逻辑
-      print(f"你使用{self.required_items}打开了{self.name}")
+      print(f" 你使用{self.required_items}打开了{self.name}")
       
 key_door = Mechanism('钥匙之门', '一扇上锁的铁门', ['钥匙'])

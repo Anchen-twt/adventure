@@ -25,8 +25,12 @@ class Scene:
      def pickup(self, player):
          if self.item:
            player.inventory.append(self.item)
-           print(f"你捡起了{self.item}")
+           print(f" 你捡起了{self.item}")
+           # 根据捡起物品执行效果
+           if self.item == '红宝石吊坠':
+               player.hp += 20
+               print(" 你的生命值增加了20点")
            # 清空场景
            self.item = None
          else:
-           print("这里没有可以拾取的物品")
+           print(" 这里没有可以拾取的物品")

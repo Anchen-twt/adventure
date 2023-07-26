@@ -19,25 +19,33 @@ class Game:
             ),
             
             'hall': Scene(
-            	   'hall', 
-            	   '你进入到城堡大厅', 
-            	   {'北': 'dungeon', '东': 'treasure'}
+            	    'hall', 
+            	    '你进入到城堡大厅', 
+            	    {'北': 'dungeon', '东': 'treasure', '西': 'garden'}
             ),
             
+            'garden':Scene(
+            	   'garden', 
+                '你进入了花园', 
+                {'东': 'hall'},
+                None,
+                '红宝石吊坠'
+            ),
+            	    
             'dungeon': Scene(
-                'dungeon', 
-                '你进入了地牢', 
-                {'南': 'hall'}, 
-                Monster('骷髅', 20, 3, ['钥匙'])
+                 'dungeon', 
+                 '你进入了地牢', 
+                 {'南': 'hall'}, 
+                 Monster('骷髅', 20, 3, ['钥匙'])
             ),
             
             'treasure': Scene(
-                'treasure', 
-                '你进入了藏宝室', 
-                {}, 
-                None, 
-                '宝藏', 
-                Mechanism('钥匙之门','一扇上锁的铁门', ['钥匙'])
+                 'treasure', 
+                 '你进入了藏宝室', 
+                 {}, 
+                 None, 
+                 '宝藏', 
+                 Mechanism('钥匙之门','一扇上锁的铁门', ['钥匙'])
             )
         }
  
@@ -46,7 +54,7 @@ class Game:
     def play(self):
         """启动游戏并处理用户输入"""
         # 提示信息
-        print('操作提示:进入 东 西 南 北 搜刮 保存 加载 退出')
+        print('操作提示:进入 东 西 南 北 搜刮\n保存 加载 清空存档\n退出\n')
         # 显示初始场景信息
         current_scene = self.scenes[self.player.loc]
         print(current_scene.desc())
@@ -135,12 +143,12 @@ class Game:
       # 如果击败怪物，设置当前场景没有怪物了
       if monster.hp <= 0:
         current_scene = self.scenes[self.player.loc]
-        print(f'你击败了{current_scene.monster.name}')
+        print(f' 你击败了{current_scene.monster.name}')
         current_scene.monster = None
         
         # 随机选择一个战利品
         loot = random.choice(monster.drops)
-        print(f'你获得了{loot}!')
+        print(f' 你获得了{loot}!')
         player.inventory.append(loot)
     
     def save_game(self, filename):
