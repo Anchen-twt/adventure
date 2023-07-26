@@ -9,11 +9,35 @@ from mechanism import key_door
 
 class Game:
     def __init__(self):
+        # 定义场景 name, desc, exits, monster, item, mechanism
         self.scenes = {
-            'start': Scene('start', '你站在城堡门前', {'进入': 'hall'}),
-            'hall': Scene('hall', '你进入到城堡大厅', {'北': 'dungeon', '东': 'treasure'}),
-            'dungeon': Scene('dungeon', '你进入了地牢', {'南': 'hall'}, Monster('骷髅', 20, 3, ['钥匙'])),
-            'treasure': Scene('treasure', '你进入了藏宝室', {}, None, '宝藏', key_door)
+            'start': Scene(
+                'start', 
+                '你站在城堡门前', 
+            	   {'进入': 'hall'}
+            ),
+            
+            'hall': Scene(
+            	   'hall', 
+            	   '你进入到城堡大厅', 
+            	   {'北': 'dungeon', '东': 'treasure'}
+            ),
+            
+            'dungeon': Scene(
+                'dungeon', 
+                '你进入了地牢', 
+                {'南': 'hall'}, 
+                Monster('骷髅', 20, 3, ['钥匙'])
+            ),
+            
+            'treasure': Scene(
+                'treasure', 
+                '你进入了藏宝室', 
+                {}, 
+                None, 
+                '宝藏', 
+                Mechanism('钥匙之门','一扇上锁的铁门', ['钥匙'])
+            )
         }
  
         self.player = Player(100, 20, [])
@@ -28,13 +52,32 @@ class Game:
             # 获取玩家输入的操作
             action = input(f'选择操作: ')
             # 根据操作执行事件                              
-            # 移动            
+            # 移动逻辑            
             if current_scene.validate_movement(action):
-                self.player.move(self.scenes, action)  
+                # 获取下一场景
+                next_scene_name = current_scene.exits[action]   
+                next_scene = self.scenes[next_scene_name]
+                can_pass = True
+                
+                # 检查下一场景的机关
+                if next_scene.mechanism:
+                    # 有机关时更新can_pass
+                    can_pass = next_scene.mechanism.can_pass(self.player)
+                    
+                    if not can_pass:
+                        print(next_scene.mechanism.desc)
+                        print("你无法通过这个机关!")
+                    else:
+                        # 通过机关
+                        next_scene.mechanism.pass_mechanism(self.player)
+                
+                # 移动
+                if can_pass:
+                    self.player.move(self.scenes, action)  
                
-                # 更新current_scene
-                current_scene = self.scenes[self.player.loc]
-                print(current_scene.desc())
+                    # 更新current_scene
+                    current_scene = next_scene
+                    print(current_scene.desc())
                 
                 # 如果有怪物
                 if current_scene.monster:
