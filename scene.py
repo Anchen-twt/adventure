@@ -1,3 +1,5 @@
+import time
+
 class Scene:
      def __init__(self, name, desc, exits, monster=None, item=None, mechanism=None):
          self.name = name
@@ -24,6 +26,12 @@ class Scene:
      # 捡起物品
      def pickup(self, player):
          if self.item:
+           print('搜刮中:')
+           # 进度条
+           for i in range(3):
+               print(' #', end='', flush=True)
+               time.sleep(0.5)
+               print()
            player.inventory.append(self.item)
            print(f" 你捡起了{self.item}")
            # 根据捡起物品执行效果
