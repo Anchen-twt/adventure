@@ -54,7 +54,7 @@ class Game:
     def play(self):
         """启动游戏并处理用户输入"""
         # 提示信息
-        print('操作提示:进入 东 西 南 北 搜刮\n保存 加载 清空存档\n退出\n')
+        print('操作提示:进入 东 西 南 北 搜刮 内视\n保存 加载 清空存档\n退出\n')
         # 显示初始场景信息
         current_scene = self.scenes[self.player.loc]
         print(current_scene.desc())
@@ -109,20 +109,21 @@ class Game:
                     if not self.check_player_death():  
                       continue
                     else:
-                      self.print_final_state()
+                      self.print_player_state(final=True)
                       break
             
             # 捡取物品
             elif action == "搜刮":
                 current_scene.pickup(self.player)   
-            
+            elif action == "内视":
+                self.print_player_state()
             elif action == '退出':
                 sys.exit()
             else:
                 print('无效操作!')
                 
             if self.check_game_win():
-              self.print_final_state()
+              self.print_player_state(final=True)
               break
     
     def check_player_death(self):
@@ -144,11 +145,12 @@ class Game:
       else:
         return False
     
-    def print_final_state(self):
-      """游戏结束时输出玩家最终状态"""
-      print(f"你的最终生命值:{self.player.hp}")
-      print(f"你的最终攻击力:{self.player.atk}")
-      print(f"你的最终物品:{self.player.inventory}")
+    def print_player_state(self, final=False):
+      """输出玩家状态"""
+      final_str = '最终' if final else ''
+      print(f"你的{final_str}生命值:{self.player.hp}")
+      print(f"你的{final_str}攻击力:{self.player.atk}")
+      print(f"你的{final_str}物品:{self.player.inventory}")
         
     def fight_with_monster(self, player, monster):
       """处理玩家和一只怪物之间的战斗"""
